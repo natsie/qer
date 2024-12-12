@@ -1,0 +1,14 @@
+.cart {
+  position: fixed;
+  width: 80vw;
+  top: 50%;
+  left: 10vw;
+}
+
+.cart-heading {
+  margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
