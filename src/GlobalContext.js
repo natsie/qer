@@ -1,5 +1,5 @@
-import { createContext, useReducer } from 'react';
-import catalogue from './catalogue';
+import { createContext, useReducer } from "react";
+import catalogue from "./catalogue";
 
 const initialGlobalState = {
   cart: {
@@ -11,7 +11,7 @@ const initialGlobalState = {
 const GlobalContext = createContext(initialGlobalState);
 
 const reducer = (state, dispatchObj) => {
-  const { action, data } = dispatchObj
+  const { action, data } = dispatchObj;
   switch (action) {
     case "TOGGLE_CART":
       return {
@@ -24,8 +24,8 @@ const reducer = (state, dispatchObj) => {
     case "UPDATE_CATALOGUE":
       return {
         ...state,
-        catalogue: { ...data.catalogue }
-      }
+        catalogue: { ...data.catalogue },
+      };
     default:
       return state;
   }
@@ -33,11 +33,7 @@ const reducer = (state, dispatchObj) => {
 
 const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialGlobalState);
-  return (
-    <GlobalContext.Provider value={{ state, dispatch }}>
-      {children}
-    </GlobalContext.Provider>
-  );
+  return <GlobalContext.Provider value={{ state, dispatch }}>{children}</GlobalContext.Provider>;
 };
 
 export { GlobalProvider, GlobalContext };
