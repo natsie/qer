@@ -1,6 +1,8 @@
 import { components as UI, styles as UIStyles } from "../../UI/UI";
+import { GlobalContext } from "../../../GlobalContext";
+import { useContext } from "react";
+
 import styles from "./Catalogue.module.css";
-import catalogue from "../../../catalogue.js";
 
 function CatalogueItem(props) {
   return (
@@ -35,16 +37,18 @@ function CatalogueItem(props) {
   );
 }
 export default function Catalogue() {
+  const { state: globalState, dispatch: globalDispatch } = useContext(GlobalContext);
+  (() => globalDispatch)();
   const itemSep = <hr className={UIStyles["ui-card-sep"]} />;
   return (
     <UI.Card className={styles["catalogue"]}>
       <p>
-        <a href="https://google.com/" target="_blank">
+        <a href="https://google.com/" target="_blank" rel="noreferrer">
           Link to Google
         </a>
       </p>
       <p>
-        <a href={document.location.href} target="_blank">
+        <a href={document.location.href} target="_blank" rel="noreferrer">
           Link to self
         </a>
       </p>
@@ -56,7 +60,7 @@ export default function Catalogue() {
         catalogue
       </h2>
       {itemSep}
-      {catalogue.items.map((i) => (
+      {globalState.catalogue.items.map((i) => (
         <>
           <CatalogueItem key={i.id} item={i} />
           {itemSep}

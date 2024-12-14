@@ -3,50 +3,38 @@ import AppHeader from "./components/default/AppHeader/AppHeader";
 import AppFooter from "./components/default/AppFooter/AppFooter";
 import Catalogue from "./components/default/Catalogue/Catalogue";
 import Cart from "./components/default/Cart/Cart";
-import { useEffect, useReducer } from "react";
+import catalogue from "./catalogue.js";
+import { useEffect, useContext } from "react";
+import { GlobalProvider, GlobalContext } from "./GlobalContext";
 
-const initialGlobalState = {
-  cart: {
-    opened: false,
-    items: new Map(),
-  },
-  wishlist: {
-    opened: false,
-    items: new Map(),
-  },
-  catalogue: {
-    ...(await import("./catalogue.js")).default,
-  },
-};
-function dispatchGlobalStateHandler(state, dispatch) {
-  function toggle(obj, prop) {
-    obj[prop] = !obj[prop];
+
+function handleKeyDown({ key, repeat }) {
+  if (key === "c" && !repeat) {
+    this.dispatch({ action: "TOGGLE_CART" });
   }
-  let [action, ...target] = dispatch.action.split("-");
-  switch (action) {
-    case "toggle":
-      let obj = state;
-      for (const p of target.slice(0, -1)) obj = obj[p];
-      toggle(obj, target[target.length - 1]);
-      break;
-  }
-  return state;
 }
+
 function App() {
-  const [globalState, dispatchGlobalState] = useReducer(dispatchGlobalStateHandler, initialGlobalState);
+  const globalContext = useContext(GlobalContext);
+
   useEffect(() => {
-    document.addEventListener("keydown", ({ key }) => {
-      key === "c" && dispatchGlobalState({ action: "toggle-cart-opened" });
-    });
-  }, []);
-  console.log(globalState);
+    const _handleKeyDown = handleKeyDown.bind(globalContext)
+    document.addEventListener("keydown", _handleKeyDown);
+
+    globalContext.dispatch({ action: "UPDATE_CATALOGUE", data: { catalogue } })
+    return () => {
+      document.removeEventListener("keydown", _handleKeyDown);
+    };
+    // eslint-disable-next-line
+  }, [globalContext.catalogue?.lastUpdate]);
+
   return (
-    <>
-      <AppHeader></AppHeader>
-      <Catalogue></Catalogue>
-      {globalState.cart.opened && <Cart></Cart>}
-      <AppFooter></AppFooter>
-    </>
+    <GlobalProvider>
+      <AppHeader />
+      <Catalogue />
+      {globalContext.state.cart.opened && <Cart />}
+      <AppFooter />
+    </GlobalProvider>
   );
 }
 

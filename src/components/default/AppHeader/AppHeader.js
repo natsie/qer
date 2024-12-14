@@ -1,7 +1,6 @@
 import UI from "../../UI/UI";
 import styles from "./AppHeader.module.css";
 import foodBg from "../../../assets/images/food.jpg";
-console.log(styles);
 
 function AppHeader() {
   return (
