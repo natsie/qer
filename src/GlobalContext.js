@@ -1,39 +1,38 @@
-import { createContext, useReducer } from "react";
-import catalogue from "./catalogue";
+import { createContext, useContext, useReducer } from "react";
+//import catalogue from "./catalogue";
 
-const initialGlobalState = {
+const igs = {
   cart: {
     opened: false,
     items: new Map(),
   },
-  catalogue, // This will be populated later
+  catalogue: undefined, // This will be populated later
 };
-const GlobalContext = createContext(initialGlobalState);
+const GlobalContext = createContext(igs);
 
 const reducer = (state, dispatchObj) => {
   const { action, data } = dispatchObj;
+  const clone = { ...state };
   switch (action) {
     case "TOGGLE_CART":
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          opened: !state.cart.opened,
-        },
-      };
+      clone.cart.opened = !clone.cart.opened;
+      return clone;
     case "UPDATE_CATALOGUE":
-      return {
-        ...state,
-        catalogue: { ...data.catalogue },
-      };
+      clone.catalogue = data.catalogue;
+      return clone;
     default:
-      return state;
+      return clone;
   }
 };
 
-const GlobalProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialGlobalState);
-  return <GlobalContext.Provider value={{ state, dispatch }}>{children}</GlobalContext.Provider>;
+const GlobalProvider = (props) => {
+  const context = useContext(GlobalContext);
+  const [state, dispatch] = useReducer(reducer, context);
+  return props.value ? (
+    <GlobalContext.Provider value={props.value}>{props.children}</GlobalContext.Provider>
+  ) : (
+    <GlobalContext.Provider value={{ state, dispatch }}>{props.children}</GlobalContext.Provider>
+  );
 };
 
-export { GlobalProvider, GlobalContext };
+export { GlobalContext, GlobalProvider };

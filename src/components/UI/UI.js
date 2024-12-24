@@ -10,8 +10,8 @@ fetch(font_msr)
     document.fonts.add(msrf);
   })
   .catch(console.log);
-export const exportObj = {
+export const components = {
   Card,
   Banner,
 };
-export { exportObj as default, exportObj as components, styles };
+export { components as default, styles };

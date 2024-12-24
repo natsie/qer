@@ -4,37 +4,35 @@ import AppFooter from "./components/default/AppFooter/AppFooter";
 import Catalogue from "./components/default/Catalogue/Catalogue";
 import Cart from "./components/default/Cart/Cart";
 import catalogue from "./catalogue.js";
-import { useEffect, useContext } from "react";
-import { GlobalProvider, GlobalContext } from "./GlobalContext";
-
+import { useEffect, useContext, useRef } from "react";
+import { GlobalContext } from "./GlobalContext";
 
 function handleKeyDown({ key, repeat }) {
   if (key === "c" && !repeat) {
-    this.dispatch({ action: "TOGGLE_CART" });
+    this.d({ ...this.s, cart: { ...this.s.cart, opened: !this.s.cart.opened } });
   }
 }
 
 function App() {
   const globalContext = useContext(GlobalContext);
+  const cartOpened = useRef(false);
 
   useEffect(() => {
-    const _handleKeyDown = handleKeyDown.bind(globalContext)
-    document.addEventListener("keydown", _handleKeyDown);
+    const eh = () => (cartOpened.current = !cartOpened.current);
+    document.addEventListener("keydown", eh);
 
-    globalContext.dispatch({ action: "UPDATE_CATALOGUE", data: { catalogue } })
-    return () => {
-      document.removeEventListener("keydown", _handleKeyDown);
-    };
+    //globalContext.dispatch({ action: "UPDATE_CATALOGUE", data: { catalogue } });
+    return () => document.removeEventListener("keydown", eh);
     // eslint-disable-next-line
   }, [globalContext.catalogue?.lastUpdate]);
 
   return (
-    <GlobalProvider>
+    <GlobalContext.Provider value={{ ...globalContext, catalogue }}>
       <AppHeader />
       <Catalogue />
-      {globalContext.state.cart.opened && <Cart />}
+      {cartOpened.current && <Cart />}
       <AppFooter />
-    </GlobalProvider>
+    </GlobalContext.Provider>
   );
 }
 

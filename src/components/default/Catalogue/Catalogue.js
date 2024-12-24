@@ -37,8 +37,7 @@ function CatalogueItem(props) {
   );
 }
 export default function Catalogue() {
-  const { state: globalState, dispatch: globalDispatch } = useContext(GlobalContext);
-  (() => globalDispatch)();
+  const { catalogue } = useContext(GlobalContext);
   const itemSep = <hr className={UIStyles["ui-card-sep"]} />;
   return (
     <UI.Card className={styles["catalogue"]}>
@@ -60,7 +59,7 @@ export default function Catalogue() {
         catalogue
       </h2>
       {itemSep}
-      {globalState.catalogue.items.map((i) => (
+      {Object.values(catalogue?.items || {}).map((i) => (
         <>
           <CatalogueItem key={i.id} item={i} />
           {itemSep}

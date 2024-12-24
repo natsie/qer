@@ -7,7 +7,7 @@ export default function AppFooter() {
       <center>
         <p>
           Made with <span className={styles["heart-emoji"]}>💖</span> by{" "}
-          <a href="https://github.com/natsie" target="_blank">
+          <a href="https://github.com/natsie" target="_blank" rel="noreferrer">
             natsie
           </a>
         </p>
