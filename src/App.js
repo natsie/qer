@@ -1,36 +1,37 @@
 import "./App.css";
+import { useEffect } from "react";
 import AppHeader from "./components/default/AppHeader/AppHeader";
 import AppFooter from "./components/default/AppFooter/AppFooter";
 import Catalogue from "./components/default/Catalogue/Catalogue";
 import Cart from "./components/default/Cart/Cart";
 import catalogue from "./catalogue.js";
-import { useEffect, useContext, useRef } from "react";
 import { GlobalContext } from "./GlobalContext";
-
-function handleKeyDown({ key, repeat }) {
-  if (key === "c" && !repeat) {
-    this.d({ ...this.s, cart: { ...this.s.cart, opened: !this.s.cart.opened } });
-  }
-}
+import { useGlobalContext } from "./hooks/useGlobalContext.js";
 
 function App() {
-  const globalContext = useContext(GlobalContext);
-  const cartOpened = useRef(false);
+  const globalContext = useGlobalContext();
+
+  function handleKeyDown({ key, repeat }) {
+    if (key === "c" && !repeat) {
+      globalContext?.dispatch?.({ action: "TOGGLE_CART" });
+    }
+  }
 
   useEffect(() => {
-    const eh = () => (cartOpened.current = !cartOpened.current);
-    document.addEventListener("keydown", eh);
+    document.addEventListener("keydown", handleKeyDown);
 
-    //globalContext.dispatch({ action: "UPDATE_CATALOGUE", data: { catalogue } });
-    return () => document.removeEventListener("keydown", eh);
-    // eslint-disable-next-line
-  }, [globalContext.catalogue?.lastUpdate]);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <GlobalContext.Provider value={{ ...globalContext, catalogue }}>
       <AppHeader />
       <Catalogue />
-      {cartOpened.current && <Cart />}
+      <Cart />
       <AppFooter />
     </GlobalContext.Provider>
   );
