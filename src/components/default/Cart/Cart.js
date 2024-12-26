@@ -6,8 +6,9 @@ export default function Cart() {
   const {
     state: { cart },
   } = useGlobalContext();
-  console.log("cart", JSON.stringify(cart, null, 2));
-  if (!cart?.opened) return <></>;
+
+  if (!cart.opened) return <></>;
+
   return (
     <UI.Card className={styles["cart"]}>
       <h1 className={`${styles["cart-heading"]} ${UIStyles["font-msr"]}`}>
