@@ -1,6 +1,4 @@
 import { createContext, useContext, useReducer } from "react";
-import catalogue from "./catalogue";
-//import catalogue from "./catalogue";
 
 const igs = {
   cart: {
@@ -12,10 +10,8 @@ const igs = {
 const GlobalContext = createContext(igs);
 
 const reducer = (state, { action, data }) => {
-  console.log("Dispatch", action);
   switch (action) {
     case "TOGGLE_CART":
-      console.log("state", state);
       return {
         ...state,
         cart: {
@@ -36,11 +32,7 @@ const reducer = (state, { action, data }) => {
 const GlobalProvider = (props) => {
   const context = useContext(GlobalContext);
   const [state, dispatch] = useReducer(reducer, context);
-  // return props.value ? (
-  //   <GlobalContext.Provider value={props.value}>
-  //     {props.children}
-  //   </GlobalContext.Provider>
-  // ) : (
+
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>
       {props.children}
